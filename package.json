@@ -1,0 +1,24 @@
+{
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/dotenv": "^6.1.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.6.2"
+  },
+  "name": "leno",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only ./src/index.ts",
+    "build": "tsc -p .",
+    "start": "node ./src/index.ts"
+  },
+  "author": "Riccorichards",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "mongoose": "^8.7.0"
+  }
+}
