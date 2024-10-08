@@ -1,23 +1,35 @@
 import mongoose from "mongoose";
+import { ProductDocs } from "../dto/product";
 
 const Product = new mongoose.Schema(
   {
     brand: { type: String },
-    type: { type: String },
+    productType: { type: String },
     description: { type: String },
     title: { type: String },
-    weight: { type: String },
     animalType: { type: String },
     price: { type: String },
-    age: { type: String },
-    breed: { type: String },
     catId: { type: String },
     discount: { type: Number },
     image: { type: String },
-    aroma: { type: String },
-    shippingDatails: {
+    mealDetails: {
       type: mongoose.Schema.ObjectId,
-      red: "Shipping",
+      ref: "Meal",
+      default: null,
+    },
+    accessoryDetails: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Accessory",
+      default: null,
+    },
+    toyDetails: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Toy",
+      default: null,
+    },
+    selfCareDetails: {
+      type: mongoose.Schema.ObjectId,
+      ref: "SelfCare",
       default: null,
     },
     clickCount: { type: Number, default: 0 },

@@ -1,13 +1,17 @@
 import { IncomingMessage, ServerResponse } from "http";
 import categoryHandler from "./categoryHandler";
 import productHandler from "./productHandler";
+import IOTools from "../tools/requestTools";
+import OrderService from "../services/orderService";
 
+const ioTools = new IOTools();
+const service = new OrderService();
 const rootHandler: {
   [key: string]: (req: IncomingMessage, res: ServerResponse) => void;
 } = {
-  "/health-checker": (req, res) => {
+  "/health-checker": async (req, res) => {
     res.writeHead(200, { "Content-Type": "text/plain" });
-    res.end("Hello, World!\n");
+    res.end("Hello, World!");
   },
   "/category": (req, res) => {
     const { method } = req;
@@ -19,7 +23,7 @@ const rootHandler: {
       notFoundHandler(req, res, "Method");
     }
   },
-  "/product": (req, res) => {
+  "/product": async (req, res) => {
     const { method } = req;
     const handler = productHandler[method || "GET"];
 
@@ -28,6 +32,36 @@ const rootHandler: {
     } else {
       notFoundHandler(req, res, "Method");
     }
+  },
+  "/create-shopping": async (req, res) => {
+    let body: string = "";
+    req.on("data", (chunk) => {
+      body += chunk.toString();
+    });
+
+    req.on("end", async () => {
+      const data = JSON.parse(body);
+      ioTools.handleResponse(
+        res,
+        201,
+        await service.CreateShippingService(data)
+      );
+    });
+  },
+  "/order": (req, res) => {
+    let body: string = "";
+    req.on("data", (chunk) => {
+      body += chunk.toString();
+    });
+
+    req.on("end", async () => {
+      const { productId } = JSON.parse(body);
+      ioTools.handleResponse(
+        res,
+        201,
+        await service.PlaceOrderService(productId)
+      );
+    });
   },
 };
 

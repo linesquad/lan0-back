@@ -4,7 +4,6 @@ interface DelivertTimeType {
 }
 
 interface IncomingShippingData {
-  productId: string;
   phone: string;
   deliveryTime: DelivertTimeType;
 }

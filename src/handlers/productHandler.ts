@@ -21,7 +21,11 @@ const productHandler: {
           );
           break;
         case "productId":
-          ioTools.handleResponse(res, 200, await service.GetProductById(query.split("=")[1]));
+          ioTools.handleResponse(
+            res,
+            200,
+            await service.GetProductById(query.split("=")[1])
+          );
           break;
         case "popular":
           ioTools.handleResponse(res, 200, await service.GetPopularProducts());
@@ -30,6 +34,8 @@ const productHandler: {
           ioTools.handleResponse(res, 200, await service.GetDiscountProducts());
           break;
       }
+    } else {
+      ioTools.handleResponse(res, 200, await service.GetProducts());
     }
   },
   POST: async (req, res) => {

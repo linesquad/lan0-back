@@ -1,19 +1,41 @@
-interface IncomingProductData {
+import { AccessoryDetailType } from "./accessory";
+import { MealDetailType } from "./meal";
+import { SelfCareDetailType } from "./selfcare";
+import { ToyDetailType } from "./toy";
+
+export interface IncomingProductData {
   brand: string;
-  type: string;
+  productType: string;
   description: string;
   title: string;
-  weight: string;
+  discount: number;
   animalType: string;
   price: string;
+  image: string;
   catId: string;
-  age: string;
-  breed: string;
-  discount: number;
-  aroma: string;
+  mealDetails: MealDetailType | null;
+  accessoryDetails: AccessoryDetailType | null;
+  toyDetails: ToyDetailType | null;
+  selfCareDetails: SelfCareDetailType | null;
 }
 
-interface ProductDocs extends IncomingProductData {
+export interface MainProductData {
+  brand: string;
+  productType: string;
+  description: string;
+  title: string;
+  discount: number;
+  animalType: string;
+  price: string;
+  image: string;
+  catId: string;
+  mealDetails: string | null;
+  accessoryDetails: string | null;
+  toyDetails: string | null;
+  selfCareDetails: string | null;
+}
+
+export interface ProductDocs extends MainProductData {
   _id: string;
   shippingDatails: string;
   clickCount: number;

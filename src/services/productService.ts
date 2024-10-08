@@ -1,3 +1,4 @@
+import { IncomingProductData, ProductDocs } from "../dto/product";
 import ProductRepository from "../repositories/productRepo";
 
 class ProductService {
@@ -14,7 +15,12 @@ class ProductService {
   async GetProductById(productId: string) {
     const product = await this.repository.GetProductById(productId);
     if (!product) throw new Error();
-    return await this.repository.IncrementClickByOne(productId, "clickCount");
+    await this.repository.IncrementClickByOne(productId, "clickCount");
+    return product;
+  }
+
+  async GetProducts() {
+    return await this.repository.GetProducts();
   }
 
   async GetProductsByCatIdService(catId: string) {
