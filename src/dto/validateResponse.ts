@@ -4,7 +4,7 @@ interface RequiredResponse {
 }
 
 interface ValidateType {
-  value: string;
+  message: string;
   expected: any;
   received: any;
 }

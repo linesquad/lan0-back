@@ -1,9 +1,11 @@
 import { IncomingMessage, ServerResponse } from "http";
 import CategoryService from "../services/categoryService";
 import IOTools from "../tools/requestTools";
+import ValidateIncomingData from "../tools/validateIncomingData";
 
 const service = new CategoryService();
 const ioTools = new IOTools();
+const validate = new ValidateIncomingData();
 
 const categoryHandler: {
   [key: string]: (req: IncomingMessage, res: ServerResponse) => void;
@@ -28,11 +30,17 @@ const categoryHandler: {
 
     req.on("end", async () => {
       const category = JSON.parse(body);
-      ioTools.handleResponse(
-        res,
-        201,
-        await service.CreateCategoryService(category)
-      );
+      const validData = validate.validateCategory(category);
+      if (validData) {
+        res.writeHead(404, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(validData, null, 2));
+      } else {
+        ioTools.handleResponse(
+          res,
+          201,
+          await service.CreateCategoryService(category)
+        );
+      }
     });
   },
   PUT: async (req, res) => {

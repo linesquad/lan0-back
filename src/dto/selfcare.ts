@@ -1,7 +1,7 @@
 export interface SelfCareDetailType {
-  usageInstructions: string;
-  ingredients: string[] | null;
-  volume: string;
+  age: string;
+  weight: string;
+  aroma: string;
 }
 
 export interface SelfCareDocs extends SelfCareDetailType {

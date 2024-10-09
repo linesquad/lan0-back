@@ -3,9 +3,11 @@ import { IncomingMessage } from "http";
 import IOTools from "../tools/requestTools";
 import ProductService from "../services/productService";
 import { notFoundHandler } from "./rootHandler";
+import ValidateIncomingData from "../tools/validateIncomingData";
 
 const ioTools = new IOTools();
 const service = new ProductService();
+const validate = new ValidateIncomingData();
 const productHandler: {
   [key: string]: (req: IncomingMessage, res: ServerResponse) => void;
 } = {
@@ -46,11 +48,25 @@ const productHandler: {
 
     req.on("end", async () => {
       const data = JSON.parse(body);
-      ioTools.handleResponse(
-        res,
-        201,
-        await service.CreateProductService(data)
+      const { productType } = data;
+      const validateBasucData = validate.validateBasicProduct(data);
+      const validateProductDetails = validate.validateProductDetails(
+        data,
+        productType
       );
+      if (validateProductDetails) {
+        res.writeHead(404, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(validateProductDetails, null, 2));
+      } else if (validateBasucData) {
+        res.writeHead(404, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(validateBasucData, null, 2));
+      } else {
+        ioTools.handleResponse(
+          res,
+          201,
+          await service.CreateProductService(data)
+        );
+      }
     });
   },
   PUT: (req, res) => {

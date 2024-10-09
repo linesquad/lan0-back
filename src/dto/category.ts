@@ -9,4 +9,3 @@ interface CategoryDocs extends IncomingCategoryData {
   products: string[];
   createdAt: Date;
 }
-

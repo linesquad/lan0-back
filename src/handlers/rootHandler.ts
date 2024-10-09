@@ -3,9 +3,12 @@ import categoryHandler from "./categoryHandler";
 import productHandler from "./productHandler";
 import IOTools from "../tools/requestTools";
 import OrderService from "../services/orderService";
+import ValidateIncomingData from "../tools/validateIncomingData";
 
 const ioTools = new IOTools();
 const service = new OrderService();
+const validate = new ValidateIncomingData();
+
 const rootHandler: {
   [key: string]: (req: IncomingMessage, res: ServerResponse) => void;
 } = {
@@ -41,11 +44,17 @@ const rootHandler: {
 
     req.on("end", async () => {
       const data = JSON.parse(body);
-      ioTools.handleResponse(
-        res,
-        201,
-        await service.CreateShippingService(data)
-      );
+      const validateData = validate.validateShipping(data);
+      if (validateData) {
+        res.writeHead(404, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(validateData, null, 2));
+      } else {
+        ioTools.handleResponse(
+          res,
+          201,
+          await service.CreateShippingService(data)
+        );
+      }
     });
   },
   "/order": (req, res) => {

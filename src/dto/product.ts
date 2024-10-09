@@ -42,3 +42,9 @@ export interface ProductDocs extends MainProductData {
   orderCount: number;
   createdAt: Date;
 }
+
+export type TargetDetails =
+  | MealDetailType
+  | ToyDetailType
+  | SelfCareDetailType
+  | AccessoryDetailType;
