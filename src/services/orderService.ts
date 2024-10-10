@@ -1,5 +1,10 @@
 import OrderRepository from "../repositories/orderRepo";
 import ProductRepository from "../repositories/productRepo";
+import {
+  APiError,
+  BadRequestError,
+  serviceLayerError,
+} from "../tools/customErrors";
 
 class OrderService {
   private repository: OrderRepository;
@@ -11,16 +16,27 @@ class OrderService {
   }
 
   async CreateShippingService(input: IncomingShippingData) {
-    const newShippingInfo = await this.repository.CreateShipping(input);
-    if (!newShippingInfo) throw new Error();
-    return newShippingInfo;
+    try {
+      const newShippingInfo = await this.repository.CreateShipping(input);
+      if (!newShippingInfo)
+        throw new BadRequestError(
+          "Something went wrong during creating process."
+        );
+      return newShippingInfo;
+    } catch (error) {
+      serviceLayerError(error);
+    }
   }
 
   async PlaceOrderService(productId: string) {
-    const shoppingInfo = await this.repository.GetShopping();
-    if (!shoppingInfo) throw new Error();
-    await this.productRepo.IncrementClickByOne(productId, "orderCount");
-    return shoppingInfo[0];
+    try {
+      const shoppingInfo = await this.repository.GetShopping();
+      if (!shoppingInfo) throw new APiError("Something went wrong.");
+      await this.productRepo.IncrementClickByOne(productId, "orderCount");
+      return shoppingInfo[0];
+    } catch (error) {
+      serviceLayerError(error);
+    }
   }
 }
 

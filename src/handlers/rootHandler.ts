@@ -4,6 +4,7 @@ import productHandler from "./productHandler";
 import IOTools from "../tools/requestTools";
 import OrderService from "../services/orderService";
 import ValidateIncomingData from "../tools/validateIncomingData";
+import { errorHandler } from "../tools/customErrors";
 
 const ioTools = new IOTools();
 const service = new OrderService();
@@ -43,18 +44,26 @@ const rootHandler: {
     });
 
     req.on("end", async () => {
-      const data = JSON.parse(body);
-      const validateData = validate.validateShipping(data);
-      if (validateData) {
-        res.writeHead(404, { "Content-Type": "application/json" });
-        res.end(JSON.stringify(validateData, null, 2));
-      } else {
-        ioTools.handleResponse(
-          res,
-          201,
-          await service.CreateShippingService(data)
-        );
+      try {
+        const data = JSON.parse(body);
+        const validateData = validate.validateShipping(data);
+        if (validateData) {
+          res.writeHead(404, { "Content-Type": "application/json" });
+          res.end(JSON.stringify(validateData, null, 2));
+        } else {
+          ioTools.handleResponse(
+            res,
+            201,
+            await service.CreateShippingService(data)
+          );
+        }
+      } catch (error) {
+        errorHandler(error, res);
       }
+    });
+
+    req.on("error", (error) => {
+      errorHandler(error, res);
     });
   },
   "/order": (req, res) => {
@@ -64,12 +73,20 @@ const rootHandler: {
     });
 
     req.on("end", async () => {
-      const { productId } = JSON.parse(body);
-      ioTools.handleResponse(
-        res,
-        201,
-        await service.PlaceOrderService(productId)
-      );
+      try {
+        const { productId } = JSON.parse(body);
+        ioTools.handleResponse(
+          res,
+          201,
+          await service.PlaceOrderService(productId)
+        );
+      } catch (error) {
+        errorHandler(error, res);
+      }
+    });
+
+    req.on("error", (error) => {
+      errorHandler(error, res);
     });
   },
 };

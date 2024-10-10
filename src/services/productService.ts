@@ -1,5 +1,10 @@
 import { IncomingProductData, ProductDocs } from "../dto/product";
 import ProductRepository from "../repositories/productRepo";
+import {
+  BadRequestError,
+  NotFoundError,
+  serviceLayerError,
+} from "../tools/customErrors";
 
 class ProductService {
   private repository: ProductRepository;
@@ -9,38 +14,85 @@ class ProductService {
   }
 
   async CreateProductService(input: IncomingProductData) {
-    return await this.repository.CreateProduct(input);
+    try {
+      const newProduct = await this.repository.CreateProduct(input);
+      if (!newProduct)
+        throw new BadRequestError(
+          "Something went wrong during creating product."
+        );
+
+      return newProduct;
+    } catch (error) {
+      serviceLayerError(error);
+    }
   }
 
   async GetProductById(productId: string) {
-    const product = await this.repository.GetProductById(productId);
-    if (!product) throw new Error();
-    await this.repository.IncrementClickByOne(productId, "clickCount");
-    return product;
+    try {
+      const product = await this.repository.GetProductById(productId);
+      if (!product) throw new NotFoundError("Product not found provided ID.");
+      await this.repository.IncrementClickByOne(productId, "clickCount");
+      return product;
+    } catch (error) {
+      serviceLayerError(error);
+    }
   }
 
   async GetProducts() {
-    return await this.repository.GetProducts();
+    try {
+      return await this.repository.GetProducts();
+    } catch (error) {
+      serviceLayerError(error);
+    }
   }
 
   async GetProductsByCatIdService(catId: string) {
-    return await this.repository.GetProductsBasedOnCatId(catId);
+    try {
+      const products = await this.repository.GetProductsBasedOnCatId(catId);
+      if (!products)
+        throw new NotFoundError("Products not found by provided category ID.");
+    } catch (error) {
+      serviceLayerError(error);
+    }
   }
 
   async UpdateProductService(input: ProductDocs) {
-    return await this.repository.UpdateProduct(input);
+    try {
+      const updatedProduct = await this.repository.UpdateProduct(input);
+      if (!updatedProduct)
+        throw new BadRequestError("Error while product updated process.");
+      return updatedProduct;
+    } catch (error) {
+      serviceLayerError(error);
+    }
   }
 
   async DeleteProductService(productId: string) {
-    return await this.repository.DeleteProduct(productId);
+    try {
+      const removedProduct = await this.repository.DeleteProduct(productId);
+      if (!removedProduct)
+        throw new NotFoundError("Product not found by provided ID");
+
+      return true;
+    } catch (error) {
+      serviceLayerError(error);
+    }
   }
 
   async GetPopularProducts() {
-    return await this.repository.GetPopularProducts();
+    try {
+      return await this.repository.GetPopularProducts();
+    } catch (error) {
+      serviceLayerError(error);
+    }
   }
 
   async GetDiscountProducts() {
-    return await this.repository.GetDiscountProducts();
+    try {
+      return await this.repository.GetDiscountProducts();
+    } catch (error) {
+      serviceLayerError(error);
+    }
   }
 }
 

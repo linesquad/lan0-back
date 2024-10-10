@@ -1,42 +1,27 @@
 import CategoryModel from "../models/category";
+import { APiError } from "../tools/customErrors";
 
 class CategoryRepository {
   async CreateCategory(input: IncomingCategoryData) {
-    try {
-      return await CategoryModel.create(input);
-    } catch (error) {
-      throw error;
-    }
+    return await CategoryModel.create(input);
   }
 
   async GetCategoryById(catId: string) {
-    try {
-      return await CategoryModel.findById(catId).populate({
-        path: "subCategory",
-        model: "Category",
-      });
-    } catch (error) {
-      throw error;
-    }
+    return await CategoryModel.findById(catId).populate({
+      path: "subCategory",
+      model: "Category",
+    });
   }
 
   async DeleteCategory(catId: string) {
-    try {
-      return await CategoryModel.findByIdAndDelete(catId);
-    } catch (error) {
-      throw error;
-    }
+    return await CategoryModel.findByIdAndDelete(catId);
   }
 
   async GetAllCategories() {
-    try {
-      return await CategoryModel.find({ parentId: null }).populate({
-        path: "subCategory",
-        model: "Category",
-      });
-    } catch (error) {
-      throw error;
-    }
+    return await CategoryModel.find({ parentId: null }).populate({
+      path: "subCategory",
+      model: "Category",
+    });
   }
 }
 
