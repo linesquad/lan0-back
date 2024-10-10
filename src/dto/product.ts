@@ -10,7 +10,7 @@ export interface IncomingProductData {
   title: string;
   discount: number;
   animalType: string;
-  price: string;
+  price: number;
   image: string;
   catId: string;
   mealDetails: MealDetailType | null;
@@ -26,7 +26,7 @@ export interface MainProductData {
   title: string;
   discount: number;
   animalType: string;
-  price: string;
+  price: number;
   image: string;
   catId: string;
   mealDetails: string | null;
@@ -42,9 +42,3 @@ export interface ProductDocs extends MainProductData {
   orderCount: number;
   createdAt: Date;
 }
-
-export type TargetDetails =
-  | MealDetailType
-  | ToyDetailType
-  | SelfCareDetailType
-  | AccessoryDetailType;

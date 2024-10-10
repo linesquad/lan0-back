@@ -8,7 +8,7 @@ const Product = new mongoose.Schema(
     description: { type: String },
     title: { type: String },
     animalType: { type: String },
-    price: { type: String },
+    price: { type: mongoose.Schema.Types.Decimal128 },
     catId: { type: String },
     discount: { type: Number },
     image: { type: String },

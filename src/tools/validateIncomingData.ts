@@ -1,6 +1,4 @@
-import { ToyDetailType } from "./../dto/toy";
-import { MealDetailType } from "../dto/meal";
-import { IncomingProductData, TargetDetails } from "../dto/product";
+import { IncomingProductData } from "../dto/product";
 import { RequiredResponse, ValidateType } from "../dto/validateResponse";
 
 class ValidateIncomingData {
@@ -56,7 +54,7 @@ class ValidateIncomingData {
       { field: "productType", value: product.productType, type: "string" },
       { field: "description", value: product.description, type: "string" },
       { field: "animalType", value: product.animalType, type: "string" },
-      { field: "price", value: product.price, type: "string" },
+      { field: "price", value: product.price, type: "number" },
       { field: "image", value: product.image, type: "string" },
       { field: "catId", value: product.catId, type: "string" },
     ];

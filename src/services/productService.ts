@@ -40,7 +40,20 @@ class ProductService {
 
   async GetProducts() {
     try {
-      return await this.repository.GetProducts();
+      const products = await this.repository.GetProducts();
+      if (!products) throw new NotFoundError("Products not found");
+      return products.map((p) => {
+        const price = Number(p.price.toString());
+        const currentPrice =
+          p.discount > 0 ? price - price / p.discount : price;
+        return {
+          _id: p._id,
+          title: p.title,
+          image: p.image,
+          price,
+          currentPrice: currentPrice.toFixed(2),
+        };
+      });
     } catch (error) {
       serviceLayerError(error);
     }
