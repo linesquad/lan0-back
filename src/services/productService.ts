@@ -5,6 +5,7 @@ import {
   NotFoundError,
   serviceLayerError,
 } from "../tools/customErrors";
+import discountLogic from "../tools/discountLogic";
 
 class ProductService {
   private repository: ProductRepository;
@@ -42,18 +43,7 @@ class ProductService {
     try {
       const products = await this.repository.GetProducts();
       if (!products) throw new NotFoundError("Products not found");
-      return products.map((p) => {
-        const price = Number(p.price.toString());
-        const currentPrice =
-          p.discount > 0 ? price - price / p.discount : price;
-        return {
-          _id: p._id,
-          title: p.title,
-          image: p.image,
-          price,
-          currentPrice: currentPrice.toFixed(2),
-        };
-      });
+      return discountLogic(products);
     } catch (error) {
       serviceLayerError(error);
     }
@@ -64,6 +54,7 @@ class ProductService {
       const products = await this.repository.GetProductsBasedOnCatId(catId);
       if (!products)
         throw new NotFoundError("Products not found by provided category ID.");
+      return discountLogic(products);
     } catch (error) {
       serviceLayerError(error);
     }
@@ -94,7 +85,8 @@ class ProductService {
 
   async GetPopularProducts() {
     try {
-      return await this.repository.GetPopularProducts();
+      const products = await this.repository.GetPopularProducts();
+      return discountLogic(products);
     } catch (error) {
       serviceLayerError(error);
     }
@@ -102,7 +94,7 @@ class ProductService {
 
   async GetDiscountProducts() {
     try {
-      return await this.repository.GetDiscountProducts();
+      return discountLogic(await this.repository.GetDiscountProducts());
     } catch (error) {
       serviceLayerError(error);
     }
