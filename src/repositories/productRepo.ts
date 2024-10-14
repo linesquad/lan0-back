@@ -60,13 +60,27 @@ class ProductRepository {
   }
 
   async GetProducts() {
-    return await ProductModel.find().select("image price discount title");
+    return await ProductModel.find()
+      .populate({
+        path: "mealDetails",
+        model: "Meal",
+      })
+      .populate({
+        path: "accessoryDetails",
+        model: "Accessory",
+      })
+      .populate({
+        path: "toyDetails",
+        model: "Toy",
+      })
+      .populate({
+        path: "selfCareDetails",
+        model: "SelfCare",
+      });
   }
 
   async GetProductsBasedOnCatId(catId: string) {
-    return await ProductModel.find({ catId }).select(
-      "image _id price discount title"
-    );
+    return await ProductModel.find({ catId });
   }
 
   async IncrementClickByOne(productId: string, target: string) {
@@ -98,12 +112,7 @@ class ProductRepository {
   async GetPopularProducts() {
     return await ProductModel.aggregate([
       {
-        $project: {
-          _id: 1,
-          title: 1,
-          image: 1,
-          price: 1,
-          discount: 1,
+        $addFields: {
           score: {
             $add: [
               { $multiply: ["$clickCount", 0.3] },
@@ -117,9 +126,7 @@ class ProductRepository {
   }
 
   async GetDiscountProducts() {
-    return await ProductModel.find({ discount: { $gt: 0 } }).select(
-      "_id image price title discount"
-    );
+    return await ProductModel.find({ discount: { $gt: 0 } });
   }
 }
 

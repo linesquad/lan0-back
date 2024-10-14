@@ -43,7 +43,7 @@ class ProductService {
     try {
       const products = await this.repository.GetProducts();
       if (!products) throw new NotFoundError("Products not found");
-      return discountLogic(products);
+      return products;
     } catch (error) {
       serviceLayerError(error);
     }
@@ -54,7 +54,7 @@ class ProductService {
       const products = await this.repository.GetProductsBasedOnCatId(catId);
       if (!products)
         throw new NotFoundError("Products not found by provided category ID.");
-      return discountLogic(products);
+      return products;
     } catch (error) {
       serviceLayerError(error);
     }
@@ -85,8 +85,7 @@ class ProductService {
 
   async GetPopularProducts() {
     try {
-      const products = await this.repository.GetPopularProducts();
-      return discountLogic(products);
+      return await this.repository.GetPopularProducts();
     } catch (error) {
       serviceLayerError(error);
     }
@@ -94,7 +93,7 @@ class ProductService {
 
   async GetDiscountProducts() {
     try {
-      return discountLogic(await this.repository.GetDiscountProducts());
+      return await this.repository.GetDiscountProducts();
     } catch (error) {
       serviceLayerError(error);
     }
