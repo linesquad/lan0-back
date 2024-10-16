@@ -39,9 +39,9 @@ class ProductService {
     }
   }
 
-  async GetProducts() {
+  async GetProducts(page: number) {
     try {
-      const products = await this.repository.GetProducts();
+      const products = await this.repository.GetProducts(page);
       if (!products) throw new NotFoundError("Products not found");
       return products;
     } catch (error) {
@@ -49,9 +49,12 @@ class ProductService {
     }
   }
 
-  async GetProductsByCatIdService(catId: string) {
+  async GetProductsByCatIdService(catId: string, page: number) {
     try {
-      const products = await this.repository.GetProductsBasedOnCatId(catId);
+      const products = await this.repository.GetProductsBasedOnCatId(
+        catId,
+        page
+      );
       if (!products)
         throw new NotFoundError("Products not found by provided category ID.");
       return products;
@@ -83,17 +86,17 @@ class ProductService {
     }
   }
 
-  async GetPopularProducts() {
+  async GetPopularProducts(page: number) {
     try {
-      return await this.repository.GetPopularProducts();
+      return await this.repository.GetPopularProducts(page);
     } catch (error) {
       serviceLayerError(error);
     }
   }
 
-  async GetDiscountProducts() {
+  async GetDiscountProducts(page: number) {
     try {
-      return await this.repository.GetDiscountProducts();
+      return await this.repository.GetDiscountProducts(page);
     } catch (error) {
       serviceLayerError(error);
     }

@@ -59,8 +59,12 @@ class ProductRepository {
       });
   }
 
-  async GetProducts() {
-    return await ProductModel.find()
+  async GetProducts(page: number = 1, limit: number = 3) {
+    const skip = (page - 1) * limit;
+
+    const products = await ProductModel.find()
+      .skip(skip)
+      .limit(limit)
       .populate({
         path: "mealDetails",
         model: "Meal",
@@ -77,10 +81,30 @@ class ProductRepository {
         path: "selfCareDetails",
         model: "SelfCare",
       });
+
+    const lenBtns = Math.ceil((await ProductModel.countDocuments()) / limit);
+    return {
+      products,
+      page,
+      lenBtns: lenBtns >= 1 ? lenBtns : null,
+    };
   }
 
-  async GetProductsBasedOnCatId(catId: string) {
-    return await ProductModel.find({ catId });
+  async GetProductsBasedOnCatId(
+    catId: string,
+    page: number,
+    limit: number = 10
+  ) {
+    const skip = (page - 1) * limit;
+    const products = await ProductModel.find({ catId }).skip(skip).limit(limit);
+    const lenBtns = Math.ceil(
+      (await ProductModel.countDocuments({ catId })) / limit
+    );
+    return {
+      products,
+      page,
+      lenBtns: lenBtns >= 1 ? lenBtns : null,
+    };
   }
 
   async IncrementClickByOne(productId: string, target: string) {
@@ -109,8 +133,9 @@ class ProductRepository {
     return await product.save();
   }
 
-  async GetPopularProducts() {
-    return await ProductModel.aggregate([
+  async GetPopularProducts(page: number, limit: number = 10) {
+    const skip = (page - 1) * limit;
+    const products = await ProductModel.aggregate([
       {
         $addFields: {
           score: {
@@ -122,11 +147,25 @@ class ProductRepository {
         },
       },
       { $sort: { score: -1 } },
-    ]);
+    ])
+      .skip(skip)
+      .limit(limit);
+    const lenBtns = Math.ceil(products.length) / limit;
+    return { products, page, lenBtns: lenBtns >= 1 ? lenBtns : null };
   }
 
-  async GetDiscountProducts() {
-    return await ProductModel.find({ discount: { $gt: 0 } });
+  async GetDiscountProducts(page: number, limit: number = 10) {
+    const skip = (page - 1) * limit;
+    const products = await ProductModel.find({ discount: { $gt: 0 } })
+      .skip(skip)
+      .limit(limit);
+    const lenBtns =
+      (await ProductModel.countDocuments({ discount: 0 })) / limit;
+    return {
+      products,
+      page,
+      lenBtns: lenBtns >= 1 ? lenBtns : null,
+    };
   }
 }
 

@@ -9,3 +9,4 @@ export interface MealDocs extends MealDetailType {
   _id: string;
   createdAt: Date;
 }
+

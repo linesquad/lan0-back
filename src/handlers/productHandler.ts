@@ -21,7 +21,10 @@ const productHandler: {
             ioTools.handleResponse(
               res,
               200,
-              await service.GetProductsByCatIdService(query.split("=")[1])
+              await service.GetProductsByCatIdService(
+                query.split("=")[1],
+                Number(query.split("&")[1].split("=")[1])
+              )
             );
             break;
           case "productId":
@@ -35,19 +38,30 @@ const productHandler: {
             ioTools.handleResponse(
               res,
               200,
-              await service.GetPopularProducts()
+              await service.GetPopularProducts(
+                Number(query.split("&")[1].split("=")[1])
+              )
             );
             break;
           case "discount":
             ioTools.handleResponse(
               res,
               200,
-              await service.GetDiscountProducts()
+              await service.GetDiscountProducts(
+                Number(query.split("&")[1].split("=")[1])
+              )
+            );
+            break;
+          case "products":
+            ioTools.handleResponse(
+              res,
+              200,
+              await service.GetProducts(
+                Number(query.split("&")[1].split("=")[1])
+              )
             );
             break;
         }
-      } else {
-        ioTools.handleResponse(res, 200, await service.GetProducts());
       }
     } catch (error) {
       errorHandler(error, res);
