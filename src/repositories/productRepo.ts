@@ -59,7 +59,7 @@ class ProductRepository {
       });
   }
 
-  async GetProducts(page: number = 1, limit: number = 5) {
+  async GetProducts(page: number = 1, limit: number = 16) {
     const skip = (page - 1) * limit;
 
     const products = await ProductModel.find()
