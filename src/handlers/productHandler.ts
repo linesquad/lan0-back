@@ -17,11 +17,12 @@ const productHandler: {
         const query = req.url.split("?")[1];
         switch (query.split("=")[0]) {
           case "catId":
+            const catId = query.split("=")[1].split("&")[0];
             ioTools.handleResponse(
               res,
               200,
               await service.GetProductsByCatIdService(
-                query.split("=")[1],
+                catId,
                 Number(query.split("&")[1].split("=")[1])
               )
             );
