@@ -2,7 +2,6 @@ import { ServerResponse } from "http";
 import { IncomingMessage } from "http";
 import IOTools from "../tools/requestTools";
 import ProductService from "../services/productService";
-import { notFoundHandler } from "./rootHandler";
 import ValidateIncomingData from "../tools/validateIncomingData";
 import { errorHandler } from "../tools/customErrors";
 

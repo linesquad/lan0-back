@@ -59,7 +59,7 @@ class ProductRepository {
       });
   }
 
-  async GetProducts(page: number = 1, limit: number = 3) {
+  async GetProducts(page: number = 1, limit: number = 16) {
     const skip = (page - 1) * limit;
 
     const products = await ProductModel.find()
@@ -93,7 +93,7 @@ class ProductRepository {
   async GetProductsBasedOnCatId(
     catId: string,
     page: number,
-    limit: number = 10
+    limit: number = 16
   ) {
     const skip = (page - 1) * limit;
     const products = await ProductModel.find({ catId }).skip(skip).limit(limit);
@@ -133,7 +133,7 @@ class ProductRepository {
     return await product.save();
   }
 
-  async GetPopularProducts(page: number, limit: number = 10) {
+  async GetPopularProducts(page: number, limit: number = 16) {
     const skip = (page - 1) * limit;
     const products = await ProductModel.aggregate([
       {
@@ -154,7 +154,7 @@ class ProductRepository {
     return { products, page, lenBtns: lenBtns >= 1 ? lenBtns : null };
   }
 
-  async GetDiscountProducts(page: number, limit: number = 10) {
+  async GetDiscountProducts(page: number, limit: number = 16) {
     const skip = (page - 1) * limit;
     const products = await ProductModel.find({ discount: { $gt: 0 } })
       .skip(skip)
