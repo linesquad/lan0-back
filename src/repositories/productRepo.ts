@@ -164,8 +164,17 @@ class ProductRepository {
         },
       },
       { $sort: { score: -1 } },
+      { $limit: 10 },
     ]);
-    return products.slice(0, 10);
+
+    const populatedProducts = await ProductModel.populate(products, [
+      { path: "mealDetails", model: "Meal" },
+      { path: "accessoryDetails", model: "Accessory" },
+      { path: "toyDetails", model: "Toy" },
+      { path: "selfCareDetails", model: "SelfCare" },
+    ]);
+
+    return populatedProducts;
   }
 
   async GetDiscountProducts() {
