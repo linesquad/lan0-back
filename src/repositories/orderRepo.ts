@@ -1,7 +1,7 @@
 import ShippingModel from "../models/shipping";
 
 class OrderRepository {
-  async CreateShipping(input: IncomingShippingData) {
+  async CreateLogin(input: IncomingLoginData) {
     return await ShippingModel.create(input);
   }
 

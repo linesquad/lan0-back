@@ -15,14 +15,14 @@ class OrderService {
     this.productRepo = new ProductRepository();
   }
 
-  async CreateShippingService(input: IncomingShippingData) {
+  async LoginService(input: IncomingLoginData) {
     try {
-      const newShippingInfo = await this.repository.CreateShipping(input);
-      if (!newShippingInfo)
+      const newLoginInfo = await this.repository.CreateLogin(input);
+      if (!newLoginInfo)
         throw new BadRequestError(
-          "Something went wrong during creating process."
+          "Something went wrong during creating login."
         );
-      return newShippingInfo;
+      return newLoginInfo;
     } catch (error) {
       serviceLayerError(error);
     }

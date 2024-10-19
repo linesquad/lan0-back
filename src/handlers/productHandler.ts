@@ -38,18 +38,14 @@ const productHandler: {
             ioTools.handleResponse(
               res,
               200,
-              await service.GetPopularProducts(
-                Number(query.split("&")[1].split("=")[1])
-              )
+              await service.GetPopularProducts()
             );
             break;
           case "discount":
             ioTools.handleResponse(
               res,
               200,
-              await service.GetDiscountProducts(
-                Number(query.split("&")[1].split("=")[1])
-              )
+              await service.GetDiscountProducts()
             );
             break;
           case "products":

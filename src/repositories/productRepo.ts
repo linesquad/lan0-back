@@ -96,7 +96,25 @@ class ProductRepository {
     limit: number = 16
   ) {
     const skip = (page - 1) * limit;
-    const products = await ProductModel.find({ catId }).skip(skip).limit(limit);
+    const products = await ProductModel.find({ catId })
+      .skip(skip)
+      .limit(limit)
+      .populate({
+        path: "mealDetails",
+        model: "Meal",
+      })
+      .populate({
+        path: "accessoryDetails",
+        model: "Accessory",
+      })
+      .populate({
+        path: "toyDetails",
+        model: "Toy",
+      })
+      .populate({
+        path: "selfCareDetails",
+        model: "SelfCare",
+      });
     const lenBtns = Math.ceil(
       (await ProductModel.countDocuments({ catId })) / limit
     );
@@ -133,8 +151,7 @@ class ProductRepository {
     return await product.save();
   }
 
-  async GetPopularProducts(page: number, limit: number = 16) {
-    const skip = (page - 1) * limit;
+  async GetPopularProducts() {
     const products = await ProductModel.aggregate([
       {
         $addFields: {
@@ -147,25 +164,28 @@ class ProductRepository {
         },
       },
       { $sort: { score: -1 } },
-    ])
-      .skip(skip)
-      .limit(limit);
-    const lenBtns = Math.ceil(products.length) / limit;
-    return { products, page, lenBtns: lenBtns >= 1 ? lenBtns : null };
+    ]);
+    return products.slice(0, 10);
   }
 
-  async GetDiscountProducts(page: number, limit: number = 16) {
-    const skip = (page - 1) * limit;
-    const products = await ProductModel.find({ discount: { $gt: 0 } })
-      .skip(skip)
-      .limit(limit);
-    const lenBtns =
-      (await ProductModel.countDocuments({ discount: 0 })) / limit;
-    return {
-      products,
-      page,
-      lenBtns: lenBtns >= 1 ? lenBtns : null,
-    };
+  async GetDiscountProducts() {
+    return await ProductModel.find({ discount: { $gt: 0 } })
+      .populate({
+        path: "mealDetails",
+        model: "Meal",
+      })
+      .populate({
+        path: "accessoryDetails",
+        model: "Accessory",
+      })
+      .populate({
+        path: "toyDetails",
+        model: "Toy",
+      })
+      .populate({
+        path: "selfCareDetails",
+        model: "SelfCare",
+      });
   }
 }
 

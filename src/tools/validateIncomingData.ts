@@ -194,21 +194,12 @@ class ValidateIncomingData {
     }
   }
 
-  validateShipping(shipping: IncomingShippingData) {
+  validateShipping(shipping: IncomingLoginData) {
     const errors: (RequiredResponse | ValidateType)[] = [];
 
     const validateRules = [
-      { field: "phone", value: shipping.phone, type: "string" },
-      {
-        field: "deliveryTime.workingHrs",
-        value: shipping.deliveryTime.workingHrs,
-        type: "string",
-      },
-      {
-        field: "deliveryTime.weekendHrs",
-        value: shipping.deliveryTime.weekendHrs,
-        type: "string",
-      },
+      { field: "username", value: shipping.username, type: "string" },
+      { field: "password", value: shipping.password, type: "string" },
     ];
 
     validateRules.forEach(({ field, value, type }) => {

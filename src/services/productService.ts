@@ -86,17 +86,17 @@ class ProductService {
     }
   }
 
-  async GetPopularProducts(page: number) {
+  async GetPopularProducts() {
     try {
-      return await this.repository.GetPopularProducts(page);
+      return await this.repository.GetPopularProducts();
     } catch (error) {
       serviceLayerError(error);
     }
   }
 
-  async GetDiscountProducts(page: number) {
+  async GetDiscountProducts() {
     try {
-      return await this.repository.GetDiscountProducts(page);
+      return await this.repository.GetDiscountProducts();
     } catch (error) {
       serviceLayerError(error);
     }

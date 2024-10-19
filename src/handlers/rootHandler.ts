@@ -37,7 +37,7 @@ const rootHandler: {
       notFoundHandler(req, res, "Method");
     }
   },
-  "/create-shopping": async (req, res) => {
+  "/login": async (req, res) => {
     let body: string = "";
     req.on("data", (chunk) => {
       body += chunk.toString();
@@ -54,7 +54,7 @@ const rootHandler: {
           ioTools.handleResponse(
             res,
             201,
-            await service.CreateShippingService(data)
+            await service.LoginService(data)
           );
         }
       } catch (error) {
