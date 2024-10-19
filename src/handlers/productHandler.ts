@@ -15,6 +15,7 @@ const productHandler: {
     try {
       if (req.url?.includes("?")) {
         const query = req.url.split("?")[1];
+
         switch (query.split("=")[0]) {
           case "catId":
             const catId = query.split("=")[1].split("&")[0];
@@ -55,6 +56,22 @@ const productHandler: {
               await service.GetProducts(
                 Number(query.split("&")[1].split("=")[1])
               )
+            );
+            break;
+          case "searchTerm":
+            ioTools.handleResponse(
+              res,
+              200,
+              await service.GetSearchedProductService(query.split("=")[1])
+            );
+            break;
+          case "minPrice":
+            const minPrice = query.split("&")[0].split("=")[1];
+            const maxPrice = query.split("&")[1].split("=")[1];
+            ioTools.handleResponse(
+              res,
+              200,
+              await service.GetPriceRangedProductsService(minPrice, maxPrice)
             );
             break;
         }

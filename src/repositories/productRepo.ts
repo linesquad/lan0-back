@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { IncomingProductData, ProductDocs } from "../dto/product";
 import AccessoryModel from "../models/accesory";
 import MealModel from "../models/meal";
@@ -195,6 +196,24 @@ class ProductRepository {
         path: "selfCareDetails",
         model: "SelfCare",
       });
+  }
+
+  async GetSearchedProduct(searchTerm: string) {
+    return await ProductModel.find({
+      title: { $regex: searchTerm, $options: "i" },
+    }).select("_id image title price discount");
+  }
+
+  async GetPriceRangedProducts(minPrice: number, maxPrice: number) {
+    const minPriceDecimal = mongoose.Types.Decimal128.fromString(
+      minPrice.toString()
+    );
+    const maxPriceDecimal = mongoose.Types.Decimal128.fromString(
+      maxPrice.toString()
+    );
+    return await ProductModel.find({
+      price: { $gte: minPriceDecimal, $lte: maxPriceDecimal },
+    }).select("_id image title price brand discout productType animalType")
   }
 }
 

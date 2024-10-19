@@ -101,6 +101,25 @@ class ProductService {
       serviceLayerError(error);
     }
   }
+
+  async GetSearchedProductService(searchTerm: string) {
+    try {
+      return await this.repository.GetSearchedProduct(searchTerm);
+    } catch (error) {
+      serviceLayerError(error);
+    }
+  }
+
+  async GetPriceRangedProductsService(minPrice: string, maxPrice: string) {
+    try {
+      return await this.repository.GetPriceRangedProducts(
+        Number(minPrice),
+        Number(maxPrice)
+      );
+    } catch (error) {
+      serviceLayerError(error);
+    }
+  }
 }
 
 export default ProductService;
