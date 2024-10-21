@@ -17,12 +17,13 @@ class OrderService {
 
   async LoginService(input: IncomingLoginData) {
     try {
-      const newLoginInfo = await this.repository.CreateLogin(input);
-      if (!newLoginInfo)
-        throw new BadRequestError(
-          "Something went wrong during creating login."
-        );
-      return newLoginInfo;
+      const username = "username123";
+      const password = "123456";
+      if (username === input.username && password === input.password) {
+        return true;
+      }
+
+      return false;
     } catch (error) {
       serviceLayerError(error);
     }

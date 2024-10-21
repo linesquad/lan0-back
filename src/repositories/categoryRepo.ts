@@ -1,5 +1,4 @@
 import CategoryModel from "../models/category";
-import { APiError } from "../tools/customErrors";
 
 class CategoryRepository {
   async CreateCategory(input: IncomingCategoryData) {
