@@ -213,7 +213,7 @@ class ProductRepository {
     );
     return await ProductModel.find({
       price: { $gte: minPriceDecimal, $lte: maxPriceDecimal },
-    }).select("_id image title price brand discout productType animalType")
+    }).select("_id image title price brand discount productType animalType");
   }
 }
 
