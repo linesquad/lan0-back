@@ -17,8 +17,8 @@ class OrderService {
 
   async LoginService(input: IncomingLoginData) {
     try {
-      const username = "username123";
-      const password = "123456";
+      const username = "Lano2024";
+      const password = "Lano123456";
       if (username === input.username && password === input.password) {
         return true;
       }
