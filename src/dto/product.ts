@@ -9,6 +9,7 @@ export interface IncomingProductData {
   description: string;
   title: string;
   breed: string;
+  code: string;
   discount: number;
   animalType: string;
   price: number;
