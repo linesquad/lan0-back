@@ -9,7 +9,7 @@ const Product = new mongoose.Schema(
     title: { type: String },
     animalType: { type: String },
     price: { type: mongoose.Schema.Types.Decimal128 },
-    catId: { type: String },
+    breed: { type: String },
     discount: { type: Number },
     image: { type: String },
     mealDetails: {
