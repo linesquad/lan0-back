@@ -43,15 +43,29 @@ class ProductService {
   async GetProducts(page: number) {
     try {
       const products = await this.repository.GetProducts(page);
-      if (!products) throw new NotFoundError("Products not found");
-      return await Promise.all(
+
+      if (!products || products.products.length === 0) {
+        throw new NotFoundError("Products not found");
+      }
+
+      const enhancedProducts = await Promise.all(
         products.products.map(async (p) => {
-          const preSignedUrl = await getPreSignedUrl(p.image);
-          return { ...p, imgUrl: preSignedUrl };
+          try {
+            const preSignedUrl = await getPreSignedUrl(p.image);
+            return { ...p, imgUrl: preSignedUrl };
+          } catch (error) {
+            console.error(
+              `Failed to generate URL for product ${p._id}:`,
+              error
+            );
+            return { ...p, imgUrl: null };
+          }
         })
       );
+
+      return enhancedProducts;
     } catch (error) {
-      serviceLayerError(error);
+      serviceLayerError(error); // Properly handle the error through the service layer
     }
   }
 

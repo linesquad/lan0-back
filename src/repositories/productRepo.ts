@@ -81,7 +81,8 @@ class ProductRepository {
       .populate({
         path: "selfCareDetails",
         model: "SelfCare",
-      });
+      })
+      .lean();
 
     const lenBtns = Math.ceil((await ProductModel.countDocuments()) / limit);
     return {
@@ -115,7 +116,8 @@ class ProductRepository {
       .populate({
         path: "selfCareDetails",
         model: "SelfCare",
-      });
+      })
+      .lean();
     const lenBtns = Math.ceil(
       (await ProductModel.countDocuments({ catId })) / limit
     );
@@ -195,13 +197,16 @@ class ProductRepository {
       .populate({
         path: "selfCareDetails",
         model: "SelfCare",
-      });
+      })
+      .lean();
   }
 
   async GetSearchedProduct(searchTerm: string) {
     return await ProductModel.find({
       title: { $regex: searchTerm, $options: "i" },
-    }).select("_id image title price discount");
+    })
+      .select("_id image title price discount")
+      .lean();
   }
 
   async GetPriceRangedProducts(minPrice: number, maxPrice: number) {
@@ -213,7 +218,9 @@ class ProductRepository {
     );
     return await ProductModel.find({
       price: { $gte: minPriceDecimal, $lte: maxPriceDecimal },
-    }).select("_id image title price brand discount productType animalType");
+    })
+      .select("_id image title price brand discount productType animalType")
+      .lean();
   }
 }
 
