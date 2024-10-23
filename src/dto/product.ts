@@ -10,6 +10,7 @@ export interface IncomingProductData {
   title: string;
   breed: string;
   code: string;
+  imgUrl: string | null;
   discount: number;
   animalType: string;
   price: number;

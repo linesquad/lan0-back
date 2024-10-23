@@ -5,6 +5,8 @@ import IOTools from "../tools/requestTools";
 import OrderService from "../services/orderService";
 import ValidateIncomingData from "../tools/validateIncomingData";
 import { errorHandler } from "../tools/customErrors";
+import uploadHandler from "../tools/uploadHandler";
+import deleteFile from "../tools/deleteFile";
 
 const ioTools = new IOTools();
 const service = new OrderService();
@@ -17,7 +19,7 @@ const rootHandler: {
     res.writeHead(200, { "Content-Type": "text/plain" });
     res.end("Hello, World!");
   },
-  "/category": (req, res) => {
+  "/category": async (req, res) => {
     const { method } = req;
     const handler = categoryHandler[method || "GET"];
 
@@ -51,11 +53,7 @@ const rootHandler: {
           res.writeHead(404, { "Content-Type": "application/json" });
           res.end(JSON.stringify(validateData, null, 2));
         } else {
-          ioTools.handleResponse(
-            res,
-            201,
-            await service.LoginService(data)
-          );
+          ioTools.handleResponse(res, 201, await service.LoginService(data));
         }
       } catch (error) {
         errorHandler(error, res);
@@ -66,7 +64,7 @@ const rootHandler: {
       errorHandler(error, res);
     });
   },
-  "/order": (req, res) => {
+  "/order": async (req, res) => {
     let body: string = "";
     req.on("data", (chunk) => {
       body += chunk.toString();
@@ -88,6 +86,20 @@ const rootHandler: {
     req.on("error", (error) => {
       errorHandler(error, res);
     });
+  },
+  "/upload": async (req, res) => {
+    try {
+      uploadHandler(req, res);
+    } catch (error) {
+      errorHandler(error, res);
+    }
+  },
+  "/delete-file": async (req, res) => {
+    try {
+      deleteFile(req, res);
+    } catch (error) {
+      errorHandler(error, res);
+    }
   },
 };
 

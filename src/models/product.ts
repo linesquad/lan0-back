@@ -10,6 +10,7 @@ const Product = new mongoose.Schema(
     animalType: { type: String },
     price: { type: mongoose.Schema.Types.Decimal128 },
     breed: { type: String },
+    imgUrl: { type: String, default: null },
     code: { type: String },
     discount: { type: Number },
     image: { type: String },

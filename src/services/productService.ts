@@ -5,7 +5,7 @@ import {
   NotFoundError,
   serviceLayerError,
 } from "../tools/customErrors";
-import discountLogic from "../tools/discountLogic";
+import { getPreSignedUrl } from "../tools/getFile";
 
 class ProductService {
   private repository: ProductRepository;
@@ -33,7 +33,8 @@ class ProductService {
       const product = await this.repository.GetProductById(productId);
       if (!product) throw new NotFoundError("Product not found provided ID.");
       await this.repository.IncrementClickByOne(productId, "clickCount");
-      return product;
+      const preSignedUrl = await getPreSignedUrl(product.image);
+      return { ...product, imgUrl: preSignedUrl };
     } catch (error) {
       serviceLayerError(error);
     }
@@ -43,7 +44,12 @@ class ProductService {
     try {
       const products = await this.repository.GetProducts(page);
       if (!products) throw new NotFoundError("Products not found");
-      return products;
+      return await Promise.all(
+        products.products.map(async (p) => {
+          const preSignedUrl = await getPreSignedUrl(p.image);
+          return { ...p, imgUrl: preSignedUrl };
+        })
+      );
     } catch (error) {
       serviceLayerError(error);
     }
@@ -57,7 +63,12 @@ class ProductService {
       );
       if (!products)
         throw new NotFoundError("Products not found by provided category ID.");
-      return products;
+      return await Promise.all(
+        products.products.map(async (p) => {
+          const preSignedUrl = await getPreSignedUrl(p.image);
+          return { ...p, imgUrl: preSignedUrl };
+        })
+      );
     } catch (error) {
       serviceLayerError(error);
     }
@@ -68,7 +79,8 @@ class ProductService {
       const updatedProduct = await this.repository.UpdateProduct(input);
       if (!updatedProduct)
         throw new BadRequestError("Error while product updated process.");
-      return updatedProduct;
+      const preSignedUrl = await getPreSignedUrl(updatedProduct.image);
+      return { ...updatedProduct, imgUrl: preSignedUrl };
     } catch (error) {
       serviceLayerError(error);
     }
@@ -88,7 +100,13 @@ class ProductService {
 
   async GetPopularProducts() {
     try {
-      return await this.repository.GetPopularProducts();
+      const products = await this.repository.GetPopularProducts();
+      return await Promise.all(
+        products.map(async (p) => {
+          const preSignedUrl = await getPreSignedUrl(p.image);
+          return { ...p, imgUrl: preSignedUrl };
+        })
+      );
     } catch (error) {
       serviceLayerError(error);
     }
@@ -96,7 +114,13 @@ class ProductService {
 
   async GetDiscountProducts() {
     try {
-      return await this.repository.GetDiscountProducts();
+      const products = await this.repository.GetDiscountProducts();
+      return await Promise.all(
+        products.map(async (p) => {
+          const preSignedUrl = await getPreSignedUrl(p.image);
+          return { ...p, imgUrl: preSignedUrl };
+        })
+      );
     } catch (error) {
       serviceLayerError(error);
     }
@@ -104,7 +128,13 @@ class ProductService {
 
   async GetSearchedProductService(searchTerm: string) {
     try {
-      return await this.repository.GetSearchedProduct(searchTerm);
+      const products = await this.repository.GetSearchedProduct(searchTerm);
+      return await Promise.all(
+        products.map(async (p) => {
+          const preSignedUrl = await getPreSignedUrl(p.image);
+          return { ...p, imgUrl: preSignedUrl };
+        })
+      );
     } catch (error) {
       serviceLayerError(error);
     }
@@ -112,9 +142,16 @@ class ProductService {
 
   async GetPriceRangedProductsService(minPrice: string, maxPrice: string) {
     try {
-      return await this.repository.GetPriceRangedProducts(
+      const products = await this.repository.GetPriceRangedProducts(
         Number(minPrice),
         Number(maxPrice)
+      );
+
+      return await Promise.all(
+        products.map(async (p) => {
+          const preSignedUrl = await getPreSignedUrl(p.image);
+          return { ...p, imgUrl: preSignedUrl };
+        })
       );
     } catch (error) {
       serviceLayerError(error);
