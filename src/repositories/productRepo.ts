@@ -57,7 +57,8 @@ class ProductRepository {
       .populate({
         path: "selfCareDetails",
         model: "SelfCare",
-      });
+      })
+      .lean();
   }
 
   async GetProducts(page: number = 1, limit: number = 16) {
