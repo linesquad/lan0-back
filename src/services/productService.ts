@@ -47,25 +47,21 @@ class ProductService {
       if (!products || products.products.length === 0) {
         throw new NotFoundError("Products not found");
       }
-
+      const { lenBtns } = products;
       const enhancedProducts = await Promise.all(
         products.products.map(async (p) => {
           try {
             const preSignedUrl = await getPreSignedUrl(p.image);
             return { ...p, imgUrl: preSignedUrl };
           } catch (error) {
-            console.error(
-              `Failed to generate URL for product ${p._id}:`,
-              error
-            );
             return { ...p, imgUrl: null };
           }
         })
       );
 
-      return enhancedProducts;
+      return { products: enhancedProducts, lenBtns, page };
     } catch (error) {
-      serviceLayerError(error); // Properly handle the error through the service layer
+      serviceLayerError(error);
     }
   }
 
@@ -77,12 +73,19 @@ class ProductService {
       );
       if (!products)
         throw new NotFoundError("Products not found by provided category ID.");
-      return await Promise.all(
+      const { lenBtns } = products;
+      const enhancedProducts = await Promise.all(
         products.products.map(async (p) => {
-          const preSignedUrl = await getPreSignedUrl(p.image);
-          return { ...p, imgUrl: preSignedUrl };
+          try {
+            const preSignedUrl = await getPreSignedUrl(p.image);
+            return { ...p, imgUrl: preSignedUrl };
+          } catch (error) {
+            return { ...p, imgUrl: null };
+          }
         })
       );
+
+      return { products: enhancedProducts, lenBtns, page };
     } catch (error) {
       serviceLayerError(error);
     }
