@@ -12,6 +12,7 @@ const Product = new mongoose.Schema(
     breed: { type: String },
     imgUrl: { type: String, default: null },
     code: { type: String },
+    catId: { type: String },
     discount: { type: Number },
     image: { type: String },
     mealDetails: {
