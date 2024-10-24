@@ -62,7 +62,9 @@ const productHandler: {
             ioTools.handleResponse(
               res,
               200,
-              await service.GetSearchedProductService(query.split("=")[1])
+              await service.GetSearchedProductService(
+                decodeURIComponent(query.split("=")[1])
+              )
             );
             break;
           case "minPrice":
