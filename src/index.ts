@@ -5,7 +5,7 @@ import config from "./config";
 async function startServer() {
   try {
     await connectToDb();
-    server.listen(config.port, () => {
+    server.listen(process.env.PORT || config.port, () => {
       console.log(`Server is running on port ${config.port}`);
     });
   } catch (error: any) {
