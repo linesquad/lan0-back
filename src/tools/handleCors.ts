@@ -1,6 +1,9 @@
 import { IncomingMessage, ServerResponse } from "http";
 
-const allowedOrigins = ["http://localhost:5173", "http://localhost:3000"];
+const allowedOrigins = [
+  "https://lano2024-0b1bbc3f481c.herokuapp.com",
+  "https://lano-admin.vercel.app",
+];
 
 export default (req: IncomingMessage, res: ServerResponse) => {
   const origin = req.headers.origin;
